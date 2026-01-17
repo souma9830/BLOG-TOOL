@@ -3,10 +3,6 @@
 
 > A modern, high-performance blog platform featuring a unique **Neo-Brutalist design system**, real-time content analytics, and full-stack capabilities with JSON Server.
 
-[![React](https://img.shields.io/badge/React-19-blue?style=for-the-badge&logo=react)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
-[![Tailwind](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
-
 ---
 
 ## 🚀 Live Demo
