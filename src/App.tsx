@@ -15,29 +15,29 @@ function App() {
 
 function HomePage() {
   return (
-    <div className="space-y-8">
-      <div className="text-center space-y-4">
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-          Welcome to CA Monk Blog
+    <div className="max-w-4xl mx-auto space-y-12">
+      <div className="space-y-4">
+        <h1 className="text-4xl font-bold text-foreground">
+          Blog Application
         </h1>
         <p className="text-muted-foreground text-lg">
-          Modern blog application built with React, TanStack Query & Tailwind CSS
+          A simple and clean blog platform for sharing thoughts and ideas.
         </p>
       </div>
 
-      <div className="flex justify-center gap-4">
-        <Button>Primary Button</Button>
-        <Button variant="outline">Outline Button</Button>
-        <Button variant="secondary">Secondary Button</Button>
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold text-foreground">Components Preview</h2>
+        <div className="flex gap-3">
+          <Button>Default</Button>
+          <Button variant="outline">Outline</Button>
+          <Button variant="secondary">Secondary</Button>
+        </div>
       </div>
 
-      <div className="bg-card border border-border rounded-lg p-8 text-center space-y-4">
-        <h2 className="text-2xl font-semibold">🚀 Components Ready</h2>
-        <p className="text-muted-foreground">
-          Layout, Navigation, and Button components are working!
-        </p>
+      <div className="bg-card border rounded-lg p-8 space-y-3">
+        <h3 className="text-lg font-medium">Work in Progress</h3>
         <p className="text-sm text-muted-foreground">
-          Building more components... Stay tuned!
+          Building the blog list, detail views, and creation form.
         </p>
       </div>
     </div>
@@ -46,9 +46,9 @@ function HomePage() {
 
 function CreatePage() {
   return (
-    <div className="text-center space-y-4">
-      <h1 className="text-3xl font-bold">Create Blog</h1>
-      <p className="text-muted-foreground">Form coming soon...</p>
+    <div className="max-w-2xl mx-auto space-y-4">
+      <h1 className="text-3xl font-bold">Create New Blog</h1>
+      <p className="text-muted-foreground">Form components coming soon.</p>
     </div>
   );
 }
