@@ -1,6 +1,5 @@
-# 🔶 BOULEVARD - Neo-Brutalist Blog Platform
+# 🔶 BOULEVARD - Blog Platform
 
-![Project Banner](https://www.shareicon.net/data/2015/12/17/688959_logo_512x512.png)
 
 > A modern, high-performance blog platform featuring a unique **Neo-Brutalist design system**, real-time content analytics, and full-stack capabilities with JSON Server.
 
