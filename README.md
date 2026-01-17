@@ -128,8 +128,7 @@ src/
 ## 👨‍💻 Author
 
 **Soumadeep**  
-- [Portfolio](https://soumadeep.com)
-- [LinkedIn](https://linkedin.com/in/soumadeep)
+- [LinkedIn](https://www.linkedin.com/in/soumadeep-s/)
 - [GitHub](https://github.com/souma9830)
 
 ---
