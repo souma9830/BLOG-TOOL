@@ -1,11 +1,13 @@
+import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { fetchBlogs } from '@/lib/api';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { PlusCircle, Calendar, ArrowUpRight } from 'lucide-react';
+import { PlusCircle, Calendar, ArrowUpRight, Search, X } from 'lucide-react';
 import { format } from 'date-fns';
 
 export function Home() {
@@ -13,6 +15,52 @@ export function Home() {
         queryKey: ['blogs'],
         queryFn: fetchBlogs,
     });
+
+    const [searchQuery, setSearchQuery] = useState('');
+    const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+
+    // Get all unique categories
+    const allCategories = useMemo(() => {
+        if (!blogs) return [];
+        const categories = new Set<string>();
+        blogs.forEach(blog => blog.category.forEach(cat => categories.add(cat)));
+        return Array.from(categories).sort();
+    }, [blogs]);
+
+    // Filter blogs based on search and categories
+    const filteredBlogs = useMemo(() => {
+        if (!blogs) return [];
+
+        return blogs.filter(blog => {
+            // Search filter
+            const searchLower = searchQuery.toLowerCase();
+            const matchesSearch = !searchQuery ||
+                blog.title.toLowerCase().includes(searchLower) ||
+                blog.description.toLowerCase().includes(searchLower) ||
+                blog.content.toLowerCase().includes(searchLower);
+
+            // Category filter
+            const matchesCategory = selectedCategories.length === 0 ||
+                blog.category.some(cat => selectedCategories.includes(cat));
+
+            return matchesSearch && matchesCategory;
+        });
+    }, [blogs, searchQuery, selectedCategories]);
+
+    const toggleCategory = (category: string) => {
+        setSelectedCategories(prev =>
+            prev.includes(category)
+                ? prev.filter(c => c !== category)
+                : [...prev, category]
+        );
+    };
+
+    const clearFilters = () => {
+        setSearchQuery('');
+        setSelectedCategories([]);
+    };
+
+    const hasActiveFilters = searchQuery || selectedCategories.length > 0;
 
     if (error) {
         return (
@@ -36,7 +84,8 @@ export function Home() {
                 </h1>
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                     <p className="text-base md:text-lg text-muted-foreground font-medium">
-                        {isLoading ? 'Loading amazing content...' : `${blogs?.length || 0} articles ready to read`}
+                        {isLoading ? 'Loading amazing content...' :
+                            `${filteredBlogs.length} of ${blogs?.length || 0} articles`}
                     </p>
                     <Link to="/create">
                         <Button size="lg" className="gap-2 px-6 md:px-8 w-full sm:w-auto">
@@ -45,6 +94,57 @@ export function Home() {
                         </Button>
                     </Link>
                 </div>
+            </div>
+
+            {/* Search & Filter Section */}
+            <div className="space-y-4">
+                {/* Search Bar */}
+                <div className="relative">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <Input
+                        type="text"
+                        placeholder="Search articles by title, description, or content..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="pl-12 pr-12 h-14 text-base"
+                    />
+                    {searchQuery && (
+                        <button
+                            onClick={() => setSearchQuery('')}
+                            className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                        >
+                            <X className="h-5 w-5" />
+                        </button>
+                    )}
+                </div>
+
+                {/* Category Filters */}
+                {!isLoading && allCategories.length > 0 && (
+                    <div className="flex items-center gap-3 flex-wrap">
+                        <span className="text-sm font-black text-muted-foreground">FILTER:</span>
+                        {allCategories.map((category) => (
+                            <button
+                                key={category}
+                                onClick={() => toggleCategory(category)}
+                                className={`px-4 py-2 text-xs font-black brutalist-border-sm transition-all ${selectedCategories.includes(category)
+                                        ? 'bg-primary text-primary-foreground brutalist-shadow-sm'
+                                        : 'bg-card hover:brutalist-shadow-sm hover:-translate-y-0.5'
+                                    }`}
+                            >
+                                {category}
+                            </button>
+                        ))}
+                        {hasActiveFilters && (
+                            <button
+                                onClick={clearFilters}
+                                className="px-4 py-2 text-xs font-black brutalist-border-sm bg-destructive/10 hover:bg-destructive/20 transition-colors flex items-center gap-2"
+                            >
+                                <X className="h-3.5 w-3.5" />
+                                CLEAR ALL
+                            </button>
+                        )}
+                    </div>
+                )}
             </div>
 
             {/* Blog Grid */}
@@ -62,9 +162,9 @@ export function Home() {
                         </div>
                     ))}
                 </div>
-            ) : blogs && blogs.length > 0 ? (
+            ) : filteredBlogs.length > 0 ? (
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-                    {blogs.map((blog) => (
+                    {filteredBlogs.map((blog) => (
                         <Link key={blog.id} to={`/blogs/${blog.id}`} className="block group">
                             <Card className="h-full hover:-translate-y-2 hover:brutalist-shadow transition-all duration-200">
                                 {blog.coverImage && (
@@ -110,6 +210,17 @@ export function Home() {
                             </Card>
                         </Link>
                     ))}
+                </div>
+            ) : hasActiveFilters ? (
+                <div className="min-h-[50vh] flex items-center justify-center">
+                    <div className="bg-muted brutalist-border p-8 md:p-12 text-center space-y-4 max-w-md">
+                        <div className="text-5xl md:text-6xl mb-2">🔍</div>
+                        <h3 className="text-2xl md:text-3xl font-black">NO MATCHES FOUND</h3>
+                        <p className="text-muted-foreground font-medium">
+                            Try different keywords or clear filters
+                        </p>
+                        <Button onClick={clearFilters} className="mt-4">CLEAR FILTERS</Button>
+                    </div>
                 </div>
             ) : (
                 <div className="min-h-[50vh] flex items-center justify-center">
