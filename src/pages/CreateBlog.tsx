@@ -14,7 +14,7 @@ import { format } from 'date-fns';
 
 const DRAFT_KEY = 'boulevard-blog-draft';
 
-// Calculate statistics
+
 function calculateStats(text: string) {
     const words = text.trim() ? text.trim().split(/\s+/).length : 0;
     const characters = text.length;
@@ -178,137 +178,140 @@ export function CreateBlog() {
             </div>
 
             <div className={`grid gap-6 ${showPreview ? 'lg:grid-cols-2' : 'lg:grid-cols-[1fr_320px]'}`}>
-                {/* Main Form */}
-                <Card>
-                    <CardHeader>
-                        <CardTitle>BLOG DETAILS</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <form onSubmit={handleSubmit} className="space-y-6">
-                            <div className="space-y-2">
-                                <Label htmlFor="title">TITLE *</Label>
-                                <Input
-                                    id="title"
-                                    placeholder="Enter blog title..."
-                                    value={formData.title}
-                                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                    required
-                                />
-                                <p className="text-xs text-muted-foreground font-medium">
-                                    {formData.title.length} / 60 characters (optimal: 30-60)
-                                </p>
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label htmlFor="description">DESCRIPTION *</Label>
-                                <Textarea
-                                    id="description"
-                                    placeholder="Brief description of your blog..."
-                                    value={formData.description}
-                                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                    required
-                                    rows={3}
-                                />
-                                <p className="text-xs text-muted-foreground font-medium">
-                                    {formData.description.length} / 160 characters (optimal: 120-160)
-                                </p>
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label htmlFor="coverImage">COVER IMAGE URL</Label>
-                                <Input
-                                    id="coverImage"
-                                    type="url"
-                                    placeholder="https://example.com/image.jpg"
-                                    value={formData.coverImage}
-                                    onChange={(e) => setFormData({ ...formData, coverImage: e.target.value })}
-                                />
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label htmlFor="category">CATEGORIES</Label>
-                                <div className="flex gap-2">
+                {/* Main Form - Hidden on mobile if preview is open */}
+                <div className={showPreview ? 'hidden lg:block' : 'block'}>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>BLOG DETAILS</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <form onSubmit={handleSubmit} className="space-y-6">
+                                <div className="space-y-2">
+                                    <Label htmlFor="title">TITLE *</Label>
                                     <Input
-                                        id="category"
-                                        placeholder="Add category (e.g., TECH)"
-                                        value={categoryInput}
-                                        onChange={(e) => setCategoryInput(e.target.value)}
-                                        onKeyDown={(e) => {
-                                            if (e.key === 'Enter') {
-                                                e.preventDefault();
-                                                handleAddCategory();
-                                            }
-                                        }}
+                                        id="title"
+                                        placeholder="Enter blog title..."
+                                        value={formData.title}
+                                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                                        required
                                     />
-                                    <Button type="button" onClick={handleAddCategory} variant="outline">
-                                        ADD
-                                    </Button>
-                                </div>
-                                {formData.category.length > 0 && (
-                                    <div className="flex gap-2 flex-wrap mt-2">
-                                        {formData.category.map((cat) => (
-                                            <button
-                                                key={cat}
-                                                type="button"
-                                                onClick={() => handleRemoveCategory(cat)}
-                                                className="px-3 py-1 brutalist-border-sm bg-secondary text-secondary-foreground text-xs font-black hover:bg-destructive hover:text-destructive-foreground transition-colors"
-                                            >
-                                                {cat} ×
-                                            </button>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label htmlFor="content">CONTENT *</Label>
-                                <Textarea
-                                    id="content"
-                                    placeholder="Write your blog content here..."
-                                    value={formData.content}
-                                    onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                                    required
-                                    rows={12}
-                                />
-                            </div>
-
-                            {mutation.error && (
-                                <div className="bg-destructive/10 brutalist-border-sm p-4">
-                                    <p className="text-sm font-bold text-destructive">
-                                        Error: {mutation.error instanceof Error ? mutation.error.message : 'Failed to create blog'}
+                                    <p className="text-xs text-muted-foreground font-medium">
+                                        {formData.title.length} / 60 characters (optimal: 30-60)
                                     </p>
                                 </div>
-                            )}
 
-                            <div className="flex gap-3">
-                                <Button type="submit" disabled={mutation.isPending} className="flex-1">
-                                    {mutation.isPending ? (
-                                        <>
-                                            <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                                            CREATING...
-                                        </>
-                                    ) : (
-                                        'CREATE BLOG'
+                                <div className="space-y-2">
+                                    <Label htmlFor="description">DESCRIPTION *</Label>
+                                    <Textarea
+                                        id="description"
+                                        placeholder="Brief description of your blog..."
+                                        value={formData.description}
+                                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                        required
+                                        rows={3}
+                                    />
+                                    <p className="text-xs text-muted-foreground font-medium">
+                                        {formData.description.length} / 160 characters (optimal: 120-160)
+                                    </p>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <Label htmlFor="coverImage">COVER IMAGE URL</Label>
+                                    <Input
+                                        id="coverImage"
+                                        type="url"
+                                        placeholder="https://example.com/image.jpg"
+                                        value={formData.coverImage}
+                                        onChange={(e) => setFormData({ ...formData, coverImage: e.target.value })}
+                                    />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <Label htmlFor="category">CATEGORIES</Label>
+                                    <div className="flex gap-2">
+                                        <Input
+                                            id="category"
+                                            placeholder="Add category (e.g., TECH)"
+                                            value={categoryInput}
+                                            onChange={(e) => setCategoryInput(e.target.value)}
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter') {
+                                                    e.preventDefault();
+                                                    handleAddCategory();
+                                                }
+                                            }}
+                                        />
+                                        <Button type="button" onClick={handleAddCategory} variant="outline">
+                                            ADD
+                                        </Button>
+                                    </div>
+                                    {formData.category.length > 0 && (
+                                        <div className="flex gap-2 flex-wrap mt-2">
+                                            {formData.category.map((cat) => (
+                                                <button
+                                                    key={cat}
+                                                    type="button"
+                                                    onClick={() => handleRemoveCategory(cat)}
+                                                    className="px-3 py-1 brutalist-border-sm bg-secondary text-secondary-foreground text-xs font-black hover:bg-destructive hover:text-destructive-foreground transition-colors"
+                                                >
+                                                    {cat} ×
+                                                </button>
+                                            ))}
+                                        </div>
                                     )}
-                                </Button>
-                                <Link to="/" className="flex-1">
-                                    <Button type="button" variant="outline" className="w-full">
-                                        CANCEL
+                                </div>
+
+                                <div className="space-y-2">
+                                    <Label htmlFor="content">CONTENT *</Label>
+                                    <Textarea
+                                        id="content"
+                                        placeholder="Write your blog content here..."
+                                        value={formData.content}
+                                        onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                                        required
+                                        rows={12}
+                                    />
+                                </div>
+
+                                {mutation.error && (
+                                    <div className="bg-destructive/10 brutalist-border-sm p-4">
+                                        <p className="text-sm font-bold text-destructive">
+                                            Error: {mutation.error instanceof Error ? mutation.error.message : 'Failed to create blog'}
+                                        </p>
+                                    </div>
+                                )}
+
+                                <div className="flex gap-3">
+                                    <Button type="submit" disabled={mutation.isPending} className="flex-1">
+                                        {mutation.isPending ? (
+                                            <>
+                                                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                                                CREATING...
+                                            </>
+                                        ) : (
+                                            'CREATE BLOG'
+                                        )}
                                     </Button>
-                                </Link>
-                            </div>
-                        </form>
-                    </CardContent>
-                </Card>
+                                    <Link to="/" className="flex-1">
+                                        <Button type="button" variant="outline" className="w-full">
+                                            CANCEL
+                                        </Button>
+                                    </Link>
+                                </div>
+                            </form>
+                        </CardContent>
+                    </Card>
+                </div>
 
                 {/* Preview or Statistics */}
                 {showPreview ? (
                     /* Live Preview */
-                    <Card className="lg:sticky lg:top-24 lg:self-start">
+                    <Card className="lg:sticky lg:top-24 lg:self-start h-fit">
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <Eye className="h-4 w-4" />
-                                LIVE PREVIEW
+                                <span className="lg:hidden">MOBILE PREVIEW</span>
+                                <span className="hidden lg:inline">LIVE PREVIEW</span>
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-6 max-h-[calc(100vh-200px)] overflow-y-auto custom-scrollbar">
