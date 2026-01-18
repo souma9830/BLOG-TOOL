@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "server": "json-server --watch db.json --port 3001"
+    "server": "json-server --watch db.json --port 3001",
+    "start": "json-server db.json --port 10000 --host 0.0.0.0 --static ./dist"
   },
   "dependencies": {
     "@radix-ui/react-label": "^2.1.0",
