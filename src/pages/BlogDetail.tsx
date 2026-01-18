@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams, useNavigate } from 'react-router-dom';
-import { fetchBlogById, fetchBookmarks, addBookmark, removeBookmark, type Bookmark } from '@/lib/api';
+import { fetchBlogById, fetchBookmarks, addBookmark, removeBookmark } from '@/lib/api';
 import { getBlogLikes, hasUserLiked, toggleLike } from '@/lib/interactions';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';

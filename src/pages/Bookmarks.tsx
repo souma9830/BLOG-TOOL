@@ -23,7 +23,7 @@ export function Bookmarks() {
 
     // Filter blogs that match bookmark IDs
     const bookmarkedBlogs = blogs?.filter(blog =>
-        bookmarks?.some(b => b.blogId === blog.id)
+        bookmarks?.some(b => Number(b.blogId) === blog.id)
     ) || [];
 
     return (
